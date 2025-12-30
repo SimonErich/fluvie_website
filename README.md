@@ -1,6 +1,18 @@
 # Fluvie Marketing Website
 
-This directory contains the marketing website for Fluvie, deployed to GitHub Pages at [fluvie.dev](https://fluvie.dev).
+[![Deploy](https://github.com/SimonErich/fluvie_website/actions/workflows/deploy.yml/badge.svg)](https://github.com/SimonErich/fluvie_website/actions/workflows/deploy.yml)
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Ffluvie.dev)](https://fluvie.dev)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+
+The marketing website for Fluvie, deployed to GitHub Pages at [fluvie.dev](https://fluvie.dev).
+
+## Related Projects
+
+| Project | Description |
+|---------|-------------|
+| [📦 fluvie](https://github.com/SimonErich/fluvie) | Main Flutter package for programmatic video generation |
+| [🤖 fluvie_mcp_server](https://github.com/SimonErich/fluvie_mcp_server) | MCP server for AI-assisted development |
+| [🌐 fluvie_website](https://github.com/SimonErich/fluvie_website) | Marketing website source code (this repo) |
 
 ## Structure
 
@@ -170,4 +182,4 @@ The website code is part of the Fluvie project and is licensed under the MIT Lic
 ## Questions?
 
 For issues or suggestions about the website, please open an issue on GitHub:
-https://github.com/simonerich/fluvie/issues
+https://github.com/SimonErich/fluvie_website/issues

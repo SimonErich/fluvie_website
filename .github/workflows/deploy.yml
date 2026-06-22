@@ -1,15 +1,12 @@
 name: Deploy fluvie.dev
 
-# Publishes fluvie.dev to GitHub Pages. The page itself lives in the Fluvie
-# monorepo (web/landing); this workflow pulls it and deploys, so the site stays
-# in sync without a manual copy. Runs on demand, daily, or when the monorepo
-# signals a change (repository_dispatch: landing-changed).
+# Publish fluvie.dev to GitHub Pages from the static files in this repo. Those
+# files are built in the Fluvie monorepo (web/site, an Astro project) and pushed
+# here by its `website` workflow; this workflow just serves them on every push.
 on:
+  push:
+    branches: [main]
   workflow_dispatch:
-  schedule:
-    - cron: '0 6 * * *'
-  repository_dispatch:
-    types: [landing-changed]
 
 permissions:
   contents: read
@@ -21,34 +18,23 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Assemble the site from the monorepo landing
-        run: |
-          set -euo pipefail
-          src="$(mktemp -d)"
-          git clone --depth 1 https://github.com/SimonErich/fluvie.git "$src"
-          mkdir -p site
-          cp "$src/web/landing/index.html" site/index.html
-          cp "$src/web/landing/fluvie_logo.svg" site/fluvie_logo.svg
-          cp "$src/web/landing/fluvie_logo_inverted.svg" site/fluvie_logo_inverted.svg
-          cp "$src/web/landing/og.png" site/og.png
-          # Keep the custom domain and disable Jekyll for the static page.
-          cp CNAME site/CNAME
-          touch site/.nojekyll
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: site
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - uses: actions/checkout@v4
+      - name: Stage the published site
+        run: |
+          mkdir _site
+          rsync -a \
+            --exclude='.git' --exclude='.github' --exclude='_site' \
+            --exclude='LICENSE' --exclude='README.md' \
+            ./ _site/
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
       - id: deployment
         uses: actions/deploy-pages@v4
